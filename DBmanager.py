@@ -49,7 +49,7 @@ def parseIntSet(nputstr=""):
 # end parseIntSet
 
 def update_comment():
-    test_run = '{}'.format(input("\nEnter ID of test case to change comment : "))
+    test_run = '{}'.format(eval(input("\nEnter ID of test case to change comment : ")))
 
     try:
         int(test_run)
@@ -63,8 +63,8 @@ def update_comment():
         print("Test case does not exist! Aborting...")
         return
 
-    print("\nCurrent comment for test case ID " + test_run + " is: \"" + str(current_comment) + "\"")
-    new_comment = '{}'.format(input("Enter new comment : "))
+    print(("\nCurrent comment for test case ID " + test_run + " is: \"" + str(current_comment) + "\""))
+    new_comment = '{}'.format(eval(input("Enter new comment : ")))
     if new_comment:
         DB.updateComment(test_run, new_comment)
     else:
@@ -72,14 +72,14 @@ def update_comment():
         return
 
 def backup():
-    file_name = '{}'.format(input("\nEnter an absolute path to create a backup file of the database (ex. c:\\temp\\backup.sql) : "))
+    file_name = '{}'.format(eval(input("\nEnter an absolute path to create a backup file of the database (ex. c:\\temp\\backup.sql) : ")))
     if file_name:
         if os.path.isabs(file_name):
             if shutil.which("mysqldump"):
                 FNULL = open(os.devnull, 'w')
                 subprocess.call(["mysqldump", "-uroot", "-padmin", "frameway", ">", "%s" % file_name],
                                 shell=True, stdout=FNULL, stderr=subprocess.STDOUT)
-                print("The file", file_name, "has been created.")
+                print(("The file", file_name, "has been created."))
             else:
                 print("ERROR: mysqldump.exe is not accessible! Probably the path of the executable is not set in PATH-environment-variable... Aborting!")
                 return
@@ -91,7 +91,7 @@ def backup():
         return
 
 def delete_test_runs():
-    test_runs = '{}'.format(input("\nEnter IDs of test cases to delete : "))
+    test_runs = '{}'.format(eval(input("\nEnter IDs of test cases to delete : ")))
     selection = parseIntSet(test_runs)
 
     if selection is None or len(selection) == 0:
@@ -102,9 +102,9 @@ def delete_test_runs():
     for n in selection:
         if n in ids:
             DB.deleteTestRun(n)
-            print('Deleted test case with id ID: ', n)
+            print(('Deleted test case with id ID: ', n))
         else:
-            print('Test case with ID %s does not exist in the database!' % n)
+            print(('Test case with ID %s does not exist in the database!' % n))
 
 
 while True:
@@ -112,17 +112,17 @@ while True:
 
     template = "{0:10}{1:30}{2:20}{3:25}{4:10}{5:50}"
     print("\n====================== [ DATABASE CONTENTS ] ======================\n")
-    print(template.format('TC ID', 'TimeStamp', 'TransactionCount', 'Product', 'Release', 'Comment'))
+    print((template.format('TC ID', 'TimeStamp', 'TransactionCount', 'Product', 'Release', 'Comment')))
 
     for testrun in testruns:
         testRunId = testrun.test_run_id
         transactionCount = DB.transactionCount(testRunId)
-        print(template.format(str(testrun.test_run_id), str(testrun.test_run_timestamp), str(transactionCount), str(testrun.test_run_product), str(testrun.test_run_release), str(testrun.test_run_comment)))
+        print((template.format(str(testrun.test_run_id), str(testrun.test_run_timestamp), str(transactionCount), str(testrun.test_run_product), str(testrun.test_run_release), str(testrun.test_run_comment))))
 
     ids = [testrun.test_run_id for testrun in testruns]
 
     try:
-        nputstr = '{}'.format(input("\nEnter command [delete] [backup] [edit comment] [quit] : "))
+        nputstr = '{}'.format(eval(input("\nEnter command [delete] [backup] [edit comment] [quit] : ")))
         if nputstr.lower() in {"q", "quit", "exit"}:
             break
         if nputstr.lower() in {"delete", "d"}:
@@ -136,6 +136,6 @@ while True:
 
     except:
         print("Oh no! Something went wrong.... \n")
-        print(sys.exc_info())
+        print((sys.exc_info()))
 
-print('\n{0}'.format(*random.sample(closing_phrases, 1)))
+print(('\n{0}'.format(*random.sample(closing_phrases, 1))))
